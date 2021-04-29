@@ -1,0 +1,203 @@
+/** Implement a rodent */
+class Rodent {
+    field int x, y;     //location of rodent in top left corner
+    
+    /** Construct a rodent given location */
+    constructor Rodent new(int Ax, int Ay) {
+        let x = Ax;
+        let y = Ay;
+        do draw();
+        return this;
+    }
+
+    method int getX() { return x; }
+    method int getY() { return y; }
+
+    method int peekNext(int wX, int wY) {
+        return Memory.peek(16384+(wY*16*32)+wX);
+    }
+
+    method void moveUp() {
+        var int testY, block, wallY;
+        let wallY = -1;
+        if (y > 0) {
+            let testY = y - 1;
+            let block = peekNext(x, testY);
+
+            while ((testY > 0) & ~(block = 0)) {
+                if (block = -1) {
+                    let wallY = testY;
+                }
+                let testY = testY - 1;
+                let block = peekNext(x, testY);
+            }
+
+            if (block = 0) {
+                if (~(wallY = -1)) {
+                    do drawWall(x, wallY - 1);
+                }
+                do erase();
+                let y = y - 1;
+                do draw();
+            }
+        }
+        return;
+    }
+
+    method void moveDown() {
+        var int testY, block, wallY;
+        let wallY = -1;
+        if (y < 15) {
+            
+            let testY = y + 1;
+            let block = peekNext(x, testY);
+
+            while ((testY < 15) & ~(block = 0)) {
+                if (block = -1) {
+                    let wallY = testY;
+                }
+                let testY = testY + 1;
+                let block = peekNext(x, testY);
+            }
+
+            if (block = 0) {
+                if (~(wallY = -1)) {
+                    do drawWall(x, wallY + 1);
+                }
+                do erase();
+                let y = y + 1;
+                do draw();
+            }
+        }
+        return;
+    }
+
+    method void moveLeft() {
+        var int testX, block, wallX;
+        let wallX = -1;
+        if (x > 0) {
+            let testX = x - 1;
+            let block = peekNext(testX, y);
+
+            while ((testX > 0) & ~(block = 0)) {
+                if (block = -1) {
+                    let wallX = testX;
+                }
+                let testX = testX - 1;
+                let block = peekNext(testX, y);
+            }
+
+            if (block = 0) {
+                if (~(wallX = -1)) {
+                    do drawWall(wallX - 1, y);
+                }
+                do erase();
+                let x = x - 1;
+                do draw();
+            }
+        }
+        return;
+    }
+
+    method void moveRight() {
+        var int testX, block, wallX;
+        let wallX = -1;
+        if (x < 31) {
+            let testX = x + 1;
+            let block = peekNext(testX, y);
+
+            while ((testX < 31) & ~(block = 0)) {
+                if (block = -1) {
+                    let wallX = testX;
+                }
+                let testX = testX + 1;
+                let block = peekNext(testX, y);
+            }
+
+            if (block = 0) {
+                if (~(wallX = -1)) {
+                    do drawWall(wallX + 1, y);
+                }
+                do erase();
+                let x = x + 1;
+                do draw();
+            }
+        }
+        return;
+    }
+
+    /** Dispose this roden */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Draw roden */
+    method void draw() {
+        var int memAddress;
+        let memAddress = 16384+(y*16*32)+x;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 4);
+        do Memory.poke(memAddress+64, 8);
+        do Memory.poke(memAddress+96, 8);
+        do Memory.poke(memAddress+128, 4360);
+        do Memory.poke(memAddress+160, 11908);
+        do Memory.poke(memAddress+192, 12786);
+        do Memory.poke(memAddress+224, 8202);
+        do Memory.poke(memAddress+256, 26886);
+        do Memory.poke(memAddress+288, 16388);
+        do Memory.poke(memAddress+320, 30724);
+        do Memory.poke(memAddress+352, 2044);
+        do Memory.poke(memAddress+384, 650);
+        do Memory.poke(memAddress+416, 1170);
+        do Memory.poke(memAddress+448, 0);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+
+    /** Erase rodent */
+    method void erase() {
+        var int memAddress;
+        let memAddress = 16384+(y*16*32)+x;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128, 0);
+        do Memory.poke(memAddress+160, 0);
+        do Memory.poke(memAddress+192, 0);
+        do Memory.poke(memAddress+224, 0);
+        do Memory.poke(memAddress+256, 0);
+        do Memory.poke(memAddress+288, 0);
+        do Memory.poke(memAddress+320, 0);
+        do Memory.poke(memAddress+352, 0);
+        do Memory.poke(memAddress+384, 0);
+        do Memory.poke(memAddress+416, 0);
+        do Memory.poke(memAddress+448, 0);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+
+    method void drawWall(int wX, int wY) {
+        var int memAddress;
+        let memAddress = 16384+(wY*16*32)+wX;
+        do Memory.poke(memAddress+0, -1);
+        do Memory.poke(memAddress+32, -31711);
+        do Memory.poke(memAddress+64, -31711);
+        do Memory.poke(memAddress+96, -1);
+        do Memory.poke(memAddress+128, -24311);
+        do Memory.poke(memAddress+160, -24311);
+        do Memory.poke(memAddress+192, -1);
+        do Memory.poke(memAddress+224, -31711);
+        do Memory.poke(memAddress+256, -31711);
+        do Memory.poke(memAddress+288, -1);
+        do Memory.poke(memAddress+320, -24311);
+        do Memory.poke(memAddress+352, -24311);
+        do Memory.poke(memAddress+384, -1);
+        do Memory.poke(memAddress+416, -31711);
+        do Memory.poke(memAddress+448, -31711);
+        do Memory.poke(memAddress+480, -1);
+        return;
+    }
+
+}

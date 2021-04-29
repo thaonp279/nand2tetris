@@ -1,0 +1,750 @@
+function Rodent.new 0
+push constant 2
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push pointer 0
+call Rodent.draw 1
+pop temp 0
+push pointer 0
+return
+function Rodent.getX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Rodent.getY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Rodent.peekNext 0
+push argument 0
+pop pointer 0
+push constant 16384
+push argument 2
+push constant 16
+call Math.multiply 2
+push constant 32
+call Math.multiply 2
+add
+push argument 1
+add
+call Memory.peek 1
+return
+function Rodent.moveUp 3
+push argument 0
+pop pointer 0
+push constant 1
+neg
+pop local 2
+push this 1
+push constant 0
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 1
+push constant 1
+sub
+pop local 0
+push pointer 0
+push this 0
+push local 0
+call Rodent.peekNext 3
+pop local 1
+label WHILE_EXP0
+push local 0
+push constant 0
+gt
+push local 1
+push constant 0
+eq
+not
+and
+not
+if-goto WHILE_END0
+push local 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+pop local 2
+label IF_FALSE1
+push local 0
+push constant 1
+sub
+pop local 0
+push pointer 0
+push this 0
+push local 0
+call Rodent.peekNext 3
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+push constant 0
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 2
+push constant 1
+neg
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push this 0
+push local 2
+push constant 1
+sub
+call Rodent.drawWall 3
+pop temp 0
+label IF_FALSE3
+push pointer 0
+call Rodent.erase 1
+pop temp 0
+push this 1
+push constant 1
+sub
+pop this 1
+push pointer 0
+call Rodent.draw 1
+pop temp 0
+label IF_FALSE2
+label IF_FALSE0
+push constant 0
+return
+function Rodent.moveDown 3
+push argument 0
+pop pointer 0
+push constant 1
+neg
+pop local 2
+push this 1
+push constant 15
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 1
+push constant 1
+add
+pop local 0
+push pointer 0
+push this 0
+push local 0
+call Rodent.peekNext 3
+pop local 1
+label WHILE_EXP0
+push local 0
+push constant 15
+lt
+push local 1
+push constant 0
+eq
+not
+and
+not
+if-goto WHILE_END0
+push local 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+pop local 2
+label IF_FALSE1
+push local 0
+push constant 1
+add
+pop local 0
+push pointer 0
+push this 0
+push local 0
+call Rodent.peekNext 3
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+push constant 0
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 2
+push constant 1
+neg
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push this 0
+push local 2
+push constant 1
+add
+call Rodent.drawWall 3
+pop temp 0
+label IF_FALSE3
+push pointer 0
+call Rodent.erase 1
+pop temp 0
+push this 1
+push constant 1
+add
+pop this 1
+push pointer 0
+call Rodent.draw 1
+pop temp 0
+label IF_FALSE2
+label IF_FALSE0
+push constant 0
+return
+function Rodent.moveLeft 3
+push argument 0
+pop pointer 0
+push constant 1
+neg
+pop local 2
+push this 0
+push constant 0
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push constant 1
+sub
+pop local 0
+push pointer 0
+push local 0
+push this 1
+call Rodent.peekNext 3
+pop local 1
+label WHILE_EXP0
+push local 0
+push constant 0
+gt
+push local 1
+push constant 0
+eq
+not
+and
+not
+if-goto WHILE_END0
+push local 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+pop local 2
+label IF_FALSE1
+push local 0
+push constant 1
+sub
+pop local 0
+push pointer 0
+push local 0
+push this 1
+call Rodent.peekNext 3
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+push constant 0
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 2
+push constant 1
+neg
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push local 2
+push constant 1
+sub
+push this 1
+call Rodent.drawWall 3
+pop temp 0
+label IF_FALSE3
+push pointer 0
+call Rodent.erase 1
+pop temp 0
+push this 0
+push constant 1
+sub
+pop this 0
+push pointer 0
+call Rodent.draw 1
+pop temp 0
+label IF_FALSE2
+label IF_FALSE0
+push constant 0
+return
+function Rodent.moveRight 3
+push argument 0
+pop pointer 0
+push constant 1
+neg
+pop local 2
+push this 0
+push constant 31
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push constant 1
+add
+pop local 0
+push pointer 0
+push local 0
+push this 1
+call Rodent.peekNext 3
+pop local 1
+label WHILE_EXP0
+push local 0
+push constant 31
+lt
+push local 1
+push constant 0
+eq
+not
+and
+not
+if-goto WHILE_END0
+push local 1
+push constant 1
+neg
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 0
+pop local 2
+label IF_FALSE1
+push local 0
+push constant 1
+add
+pop local 0
+push pointer 0
+push local 0
+push this 1
+call Rodent.peekNext 3
+pop local 1
+goto WHILE_EXP0
+label WHILE_END0
+push local 1
+push constant 0
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 2
+push constant 1
+neg
+eq
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push pointer 0
+push local 2
+push constant 1
+add
+push this 1
+call Rodent.drawWall 3
+pop temp 0
+label IF_FALSE3
+push pointer 0
+call Rodent.erase 1
+pop temp 0
+push this 0
+push constant 1
+add
+pop this 0
+push pointer 0
+call Rodent.draw 1
+pop temp 0
+label IF_FALSE2
+label IF_FALSE0
+push constant 0
+return
+function Rodent.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Rodent.draw 1
+push argument 0
+pop pointer 0
+push constant 16384
+push this 1
+push constant 16
+call Math.multiply 2
+push constant 32
+call Math.multiply 2
+add
+push this 0
+add
+pop local 0
+push local 0
+push constant 0
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 4
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 8
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 8
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 4360
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 11908
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 12786
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 8202
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 26886
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 16388
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 30724
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 2044
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 650
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 1170
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function Rodent.erase 1
+push argument 0
+pop pointer 0
+push constant 16384
+push this 1
+push constant 16
+call Math.multiply 2
+push constant 32
+call Math.multiply 2
+add
+push this 0
+add
+pop local 0
+push local 0
+push constant 0
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+push constant 0
+return
+function Rodent.drawWall 1
+push argument 0
+pop pointer 0
+push constant 16384
+push argument 2
+push constant 16
+call Math.multiply 2
+push constant 32
+call Math.multiply 2
+add
+push argument 1
+add
+pop local 0
+push local 0
+push constant 0
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 32
+add
+push constant 31711
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 64
+add
+push constant 31711
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 96
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 128
+add
+push constant 24311
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 160
+add
+push constant 24311
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 192
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 224
+add
+push constant 31711
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 256
+add
+push constant 31711
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 288
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 320
+add
+push constant 24311
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 352
+add
+push constant 24311
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 384
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 416
+add
+push constant 31711
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 448
+add
+push constant 31711
+neg
+call Memory.poke 2
+pop temp 0
+push local 0
+push constant 480
+add
+push constant 1
+neg
+call Memory.poke 2
+pop temp 0
+push constant 0
+return

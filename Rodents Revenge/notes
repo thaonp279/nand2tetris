@@ -1,0 +1,177 @@
+
+        while (j < 2) {
+            let testDis = calDistance(rX, rY, x+i, y+j);
+            let valid = validifyMove(x+i, y+j);
+            if (((testDis < minDis) | (testDis = minDis)) & (valid)) {
+                if ((i=0) & (j=0)) {
+                    
+                } else {
+                    let minDis = testDis;
+                    let minX = x+i;
+                    let minY = y+j;
+                }
+            }
+
+            let j = j + 1;
+
+            if (j = 2) {
+                let j = -1;
+                let i = i + 1;
+                if (i = 2) {
+                    do erase();
+                    let x = minX;
+                    let y = minY;
+                    do draw();
+                    do Sys.wait(100);
+                    return;
+                }
+            }
+        }
+
+
+                while (j > -2) {
+            let testDis = calDistance(rX, rY, x+i, y+j);
+            let valid = validifyMove(x+i, y+j);
+            if ((testDis < minDis) & valid) {
+                let minDis = testDis;
+                let minX = x+i;
+                let minY = y+j;
+            }
+            // exit loop
+            if (i=1 & j=1) {
+                let j = 2;
+            }
+            let j = -j;
+            if (j = -1) {
+                let i = 1;
+            }
+        }
+
+        // give bias to straight moves
+        let j = -1;
+        while (j > -2) {
+            let testDis = calDistance(rX, rY, x, y+j);
+            let valid = validifyMove(x, y+j);
+            if ((testDis < minDis) & valid) {
+                let minDis = testDis;
+                let minX = x;
+                let minY = y+j;
+            }
+            let testDis = calDistance(rX, rY, x+j, y);
+            let valid = validifyMove(x+j, y);
+            if ((testDis < minDis) & valid) {
+                let minDis = testDis;
+                let minX = x+j;
+                let minY = y;
+            }
+            //break loop
+            if (j = 1) {
+                let j = 2;
+            }
+            let j = -j;
+        }
+
+
+
+
+    method void moveRodent(char key) {
+        var int rX, rY, wall;
+        let rX = rodent.getX();
+        let rY = rodent.getY();
+
+        if (key = 131) {
+            let rY = rY - 1;
+            let wall = pokeNext(rX, rY);
+
+            // if no wall on top then move like usual
+            if (~(wall = -1)) {
+                do rodent.moveUp();
+            }
+            // if wall on top then check next wall on top until no wall or reach the top
+            else {
+                while (rY > 0 & wall = -1) {
+                    let rY = rY - 1;
+                    let wall = pokeNext(rX, rY);
+                }
+
+                if (~(wall = -1)) {
+                    do rodent.moveUp();
+                    do drawWall(rX, rY);
+                }
+            }
+        }
+
+        if (key = 133) {
+            let rY = rY + 1;
+            let wall = pokeNext(rX, rY);
+
+            // if no wall below then move like usual
+            if (~(wall = -1)) {
+                do rodent.moveDown();
+            }
+            // if wall below then check next wall below until no wall or reach the bottom
+            else {
+                while (rY < 15 & wall = -1) {
+                    let rY = rY + 1;
+                    let wall = pokeNext(rX, rY);
+                }
+
+                if (~(wall = -1)) {
+                    do rodent.moveDown();
+                    do drawWall(rX, rY);
+                }
+            }
+        }
+
+        if (key = 130) {
+            let rX = rX - 1;
+            let wall = pokeNext(rX, rY);
+
+            // if no wall on left then move like usual
+            if (~(wall = -1)) {
+                do rodent.moveLeft();
+            }
+            // if wall on left then check next wall on left until no wall or reach the left
+            else {
+                while (rX > 0 & wall = -1) {
+                    let rX = rX - 1;
+                    let wall = pokeNext(rX, rY);
+                }
+
+                if (~(wall = -1)) {
+                    do rodent.moveLeft();
+                    do drawWall(rX, rY);
+                }
+            }
+        }
+
+        if (key = 132) {
+            let rX = rX + 1;
+            let wall = pokeNext(rX, rY);
+
+            // if no wall on right then move like usual
+            if (~(wall = -1)) {
+                do rodent.moveRight();
+            }
+            // if wall on right then check next wall on left until no wall or reach the right
+            else {
+                while (rX < 31 & wall = -1) {
+                    let rX = rX + 1;
+                    let wall = pokeNext(rX, rY);
+                }
+
+                if (~(wall = -1)) {
+                    do rodent.moveRight();
+                    do drawWall(rX, rY);
+                }
+            }
+        }
+        do Sys.wait(100);
+        return;
+    }
+
+        method int pokeNext(int x, int y) {
+        var int memAddress;
+        let memAddress = 16384+(y*16*32)+x;
+        return Memory.peek(memAddress);
+    }

@@ -1,0 +1,227 @@
+/** Implement a cat **/
+class Cat {
+    field int x, y;
+    field boolean sleep;
+
+    constructor Cat new(int Ax, int Ay) {
+        let x = Ax;
+        let y = Ay;
+        let sleep = false;
+        do draw();
+        return this;
+    }
+
+    method int getX() { return x; }
+    method int getY() { return y; }
+    method boolean getSleep() { return sleep; }
+
+    method void pushed(int cX, int cY){
+        let x = cX;
+        let y = cY;
+        return;
+    }
+
+    method int calDistance(int rX, int rY, int cX, int cY) {
+        var int disX, disY;
+        let disX = Math.abs(rX - cX);
+        let disY = Math.abs(rY - cY);
+        return Math.max(disX, disY);
+    }
+
+    method boolean validifyMove(int cX, int cY) {
+        var int memAddress;
+        let memAddress = 16384+(cY*16*32)+cX;
+        if ((cX > -1) & (cX < 32) & (cY > -1) & (cY < 16)) {
+            if (Memory.peek(memAddress) = 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    method void run(int rX, int rY) {
+        var int minX, minY, minDis, i, j, testDis, backupX, backupY;
+        var boolean valid;
+
+        let i = -1;
+        let j = -1;
+        let minX = -1;
+        let minY = -1;
+        let backupX = -1;
+        let backupY = -1;
+        let minDis = calDistance(rX, rY, x, y);
+
+        //find shorter way
+        while (j < 2) {
+            let testDis = calDistance(rX, rY, x+i, y+j);
+            let valid = validifyMove(x+i, y+j);
+            
+            if (valid) {
+                if ((i=0) & (j=0)) {
+                } else {
+                    let backupX = x+i;
+                    let backupY = y+j;
+                    if (testDis < minDis) {
+                        let minDis = testDis;
+                        let minX = x+i;
+                        let minY = y+j;
+                    }
+                }
+            }
+            
+            if ((i=1) & (j=1)) {
+                let j = 2;
+            }
+            let j = j + 1;
+            if (j = 2) {
+                let j = -1;
+                let i = i + 1;
+            }
+        }
+
+        //if can't find shorter way then move to align with mouse
+        if (minX = -1) {
+            if (x < rX) {
+                let minX = x + 1;
+            } else {
+                let minX = x -1;
+            }
+
+            let valid = validifyMove(minX, y);
+            if (~valid) {
+                let minX = x;
+            }
+
+            if (y < rY) {
+                let minY = y + 1;
+            } else {
+                let minY = y - 1;
+            }
+            let valid = validifyMove(minX, minY);
+            if (~valid) {
+                let minY = y;
+            }
+        }
+
+        // if no shorter or equal move, move at random
+        if ((minX = x) & (minY = y)) {
+            let minX = backupX;
+            let minY = backupY;
+        }
+
+        if (~(Memory.peek(16384+(y*16*32)+x)=-1)){
+            do erase();
+        }
+
+        // if cannot move go to sleep
+        let valid = validifyMove(minX, minY);
+        if (~valid) {
+            do sleep();
+            return;
+        }
+
+        let x = minX;
+        let y = minY;
+        do draw();
+        return;
+    }
+
+    method void dispose(){
+        do drawCheese();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void sleep() {
+        var int memAddress;
+        let sleep = true;
+        let memAddress = 16384+(y*16*32)+x;
+        do Memory.poke(memAddress+0, 17408);
+        do Memory.poke(memAddress+32, -17920);
+        do Memory.poke(memAddress+64, -32256);
+        do Memory.poke(memAddress+96, -32256);
+        do Memory.poke(memAddress+128, -21512);
+        do Memory.poke(memAddress+160, -32252);
+        do Memory.poke(memAddress+192, -28158);
+        do Memory.poke(memAddress+224, 27650);
+        do Memory.poke(memAddress+256, 4098);
+        do Memory.poke(memAddress+288, 5317);
+        do Memory.poke(memAddress+320, 11529);
+        do Memory.poke(memAddress+352, 5105);
+        do Memory.poke(memAddress+384, 7170);
+        do Memory.poke(memAddress+416, 4);
+        do Memory.poke(memAddress+448, 56);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+
+    method void draw(){
+        var int memAddress;
+        let memAddress = 16384+(y*16*32)+x;
+        do Memory.poke(memAddress+0, 1);
+        do Memory.poke(memAddress+32, 17410);
+        do Memory.poke(memAddress+64, -17916);
+        do Memory.poke(memAddress+96, -32252);
+        do Memory.poke(memAddress+128, -32254);
+        do Memory.poke(memAddress+160, -22015);
+        do Memory.poke(memAddress+192, -31751);
+        do Memory.poke(memAddress+224, -28154);
+        do Memory.poke(memAddress+256, 27649);
+        do Memory.poke(memAddress+288, 4097);
+        do Memory.poke(memAddress+320, 8193);
+        do Memory.poke(memAddress+352, 17377);
+        do Memory.poke(memAddress+384, -26038);
+        do Memory.poke(memAddress+416, -21870);
+        do Memory.poke(memAddress+448, -11534);
+        do Memory.poke(memAddress+480, 7196);
+        return;
+    }
+
+    method void erase() {
+        var int memAddress;
+        let memAddress = 16384+(y*16*32)+x;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128, 0);
+        do Memory.poke(memAddress+160, 0);
+        do Memory.poke(memAddress+192, 0);
+        do Memory.poke(memAddress+224, 0);
+        do Memory.poke(memAddress+256, 0);
+        do Memory.poke(memAddress+288, 0);
+        do Memory.poke(memAddress+320, 0);
+        do Memory.poke(memAddress+352, 0);
+        do Memory.poke(memAddress+384, 0);
+        do Memory.poke(memAddress+416, 0);
+        do Memory.poke(memAddress+448, 0);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+
+    method void drawCheese() {
+        var int memAddress;
+        let memAddress = 16384+(y*16*32)+x;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 8190);
+        do Memory.poke(memAddress+128, 8198);
+        do Memory.poke(memAddress+160, 16394);
+        do Memory.poke(memAddress+192, 16402);
+        do Memory.poke(memAddress+224, 24610);
+        do Memory.poke(memAddress+256, 20548);
+        do Memory.poke(memAddress+288, 19592);
+        do Memory.poke(memAddress+320, 8976);
+        do Memory.poke(memAddress+352, 4384);
+        do Memory.poke(memAddress+384, 3392);
+        do Memory.poke(memAddress+416, 896);
+        do Memory.poke(memAddress+448, 0);
+        do Memory.poke(memAddress+480, 0);
+        return;
+    }
+}

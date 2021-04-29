@@ -1,0 +1,135 @@
+class Game {
+    field Rodent rodent;
+    field Cat cat;
+    field Cat cat1;
+    
+    constructor Game new() {
+        var int i, j;
+        let rodent = Rodent.new(15, 7);
+        let cat = Cat.new(15,15);
+        let cat1 = Cat.new(31,0);
+        let i = -11;
+        let j = -4;
+
+        while (j < 5) {
+            do drawWall(rodent.getX() + i, rodent.getY() + j);
+            let j = j+ 1;
+            if (j = 5) {
+                let i = i + 1;
+                let j = -4;
+                if (i = 12) {
+                    do rodent.draw();
+                    return this;
+                }
+            }
+        }
+        return this;
+    }
+
+
+    method void moveRodent(char key) {
+        if (key = 131) { do rodent.moveUp(); }
+        if (key = 133) { do rodent.moveDown(); }
+        if (key = 130) { do rodent.moveLeft(); }
+        if (key = 132) { do rodent.moveRight(); }
+        do Sys.wait(50);
+        return;
+    }
+
+    method boolean checkCats() {
+        if ((cat.getSleep()) & (cat1.getSleep())) {
+            return true;
+        }
+        return false;
+    }
+
+    method void disposeCats() {
+        do cat.dispose();
+        do cat1.dispose();
+        return;
+    }
+
+    method void moveCats(int x, int y) {
+        do cat.run(x, y);
+        do cat1.run(x, y);
+        do Sys.wait(100);
+        return;
+    }
+
+    method void run() {
+        var int rX, rY, i, j;
+        var char key;
+        var boolean exit, catsKilled;
+
+        let exit = false;
+        let catsKilled = false;
+
+        while (~exit) {
+            let i = -1;
+            let j = -1;
+            let rX = rodent.getX();
+            let rY = rodent.getY();
+            let key = Keyboard.keyPressed();
+
+            // if cats haven't been killed, move cats
+            if (~catsKilled) {
+                do moveCats(rX, rY);
+                //if all cats are asleep, dispose cats and turn to cheese
+                if ((checkCats())) {
+                    do disposeCats();
+                    let catsKilled = true;
+                }
+            }
+            
+            if (~(key = 0)) {
+                do moveRodent(key);
+            }
+            // if cats are in next block, game over
+            while (j < 2) {
+                let rX = rodent.getX() + i;
+                let rY = rodent.getY() + j;
+                if ((rX > -1) & (rX < 32) & (rY > -1) & (rY < 16)) {
+                    if (Memory.peek(16384+(rY*16*32)+rX) = 1) {
+                        let exit = true;
+                    }
+                }
+                    let j = j + 1;
+                    if (j = 2) {
+                        let i = i + 1;
+                        let j = -1;
+                    }
+                    if (i = 2) {
+                        let j = 2;
+                    }
+            }
+        }
+        return;
+    }
+
+    method void drawWall(int x, int y) {
+        var int memAddress;
+        let memAddress = 16384+(y*16*32)+x;
+        do Memory.poke(memAddress+0, -1);
+        do Memory.poke(memAddress+32, -31711);
+        do Memory.poke(memAddress+64, -31711);
+        do Memory.poke(memAddress+96, -1);
+        do Memory.poke(memAddress+128, -24311);
+        do Memory.poke(memAddress+160, -24311);
+        do Memory.poke(memAddress+192, -1);
+        do Memory.poke(memAddress+224, -31711);
+        do Memory.poke(memAddress+256, -31711);
+        do Memory.poke(memAddress+288, -1);
+        do Memory.poke(memAddress+320, -24311);
+        do Memory.poke(memAddress+352, -24311);
+        do Memory.poke(memAddress+384, -1);
+        do Memory.poke(memAddress+416, -31711);
+        do Memory.poke(memAddress+448, -31711);
+        do Memory.poke(memAddress+480, -1);
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+}
